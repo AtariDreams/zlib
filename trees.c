@@ -149,7 +149,7 @@ local void send_all_trees OF((deflate_state *s, int lcodes, int dcodes,
 local void compress_block OF((deflate_state *s, const ct_data *ltree,
                               const ct_data *dtree));
 local int  detect_data_type OF((deflate_state *s));
-local unsigned bi_reverse OF((unsigned code, int len));
+local unsigned bi_reverse OF((unsigned code, unsigned len));
 local void bi_windup      OF((deflate_state *s));
 local void bi_flush       OF((deflate_state *s));
 
@@ -326,7 +326,7 @@ local void tr_static_init()
 void gen_trees_header()
 {
     FILE *header = fopen("trees.h", "w");
-    int i;
+    unsigned int i;
 
     Assert (header != NULL, "Can't open trees.h");
     fprintf(header,
@@ -407,7 +407,7 @@ void ZLIB_INTERNAL _tr_init(s)
 local void init_block(s)
     deflate_state *s;
 {
-    int n; /* iterates over tree elements */
+    unsigned int n; /* iterates over tree elements */
 
     /* Initialize the trees. */
     for (n = 0; n < L_CODES;  n++) s->dyn_ltree[n].Freq = 0;
@@ -1135,13 +1135,13 @@ local int detect_data_type(s)
  */
 local unsigned bi_reverse(code, len)
     unsigned code; /* the value to invert */
-    int len;       /* its bit length */
+    unsigned len;       /* its bit length */
 {
     register unsigned res = 0;
-    do {
+    for (; len; --len) {
         res |= code & 1;
         code >>= 1, res <<= 1;
-    } while (--len > 0);
+    };
     return res >> 1;
 }
 
