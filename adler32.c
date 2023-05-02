@@ -89,7 +89,7 @@ uLong ZEXPORT adler32_z(adler, buf, len)
 
     /* in case short lengths are provided, keep it somewhat fast */
     if (len < 16) {
-        while (len--) {
+        for (; len; --len) {
             adler += *buf++;
             sum2 += adler;
         }
@@ -118,7 +118,7 @@ uLong ZEXPORT adler32_z(adler, buf, len)
             DO16(buf);
             buf += 16;
         }
-        while (len--) {
+        for (; len; --len) {
             adler += *buf++;
             sum2 += adler;
         }
