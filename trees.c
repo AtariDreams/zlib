@@ -820,7 +820,7 @@ local int build_bl_tree(s)
     }
     /* Update opt_len to include the bit length tree and counts */
     s->opt_len += 3*((ulg)max_blindex + 1) + 5 + 5 + 4;
-    Tracev((stderr, "\ndyn trees: dyn %ld, stat %ld",
+    Tracev((stderr, "\ndyn trees: dyn %lu, stat %lu",
             s->opt_len, s->static_len));
 
     return max_blindex;
