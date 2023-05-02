@@ -144,8 +144,8 @@ local void build_tree     OF((deflate_state *s, tree_desc *desc));
 local void scan_tree      OF((deflate_state *s, ct_data *tree, int max_code));
 local void send_tree      OF((deflate_state *s, ct_data *tree, int max_code));
 local unsigned  build_bl_tree  OF((deflate_state *s));
-local void send_all_trees OF((deflate_state *s, int lcodes, int dcodes,
-                              int blcodes));
+local void send_all_trees OF((deflate_state *s, unsigned lcodes, unsigned dcodes,
+                              unsigned blcodes));
 local void compress_block OF((deflate_state *s, const ct_data *ltree,
                               const ct_data *dtree));
 local int  detect_data_type OF((deflate_state *s));
@@ -751,7 +751,7 @@ local void send_tree(s, tree, max_code)
     int max_code;       /* and its largest code of non zero frequency */
 {
     int n;                     /* iterates over all tree elements */
-    int prevlen = -1;          /* last emitted length */
+    int prevlen = 0;           /* last emitted length */
     int curlen;                /* length of current code */
     int nextlen = tree[0].Len; /* length of next code */
     int count = 0;             /* repeat count of the current code */
@@ -833,7 +833,7 @@ local unsigned build_bl_tree(s)
  */
 local void send_all_trees(s, lcodes, dcodes, blcodes)
     deflate_state *s;
-    int lcodes, dcodes, blcodes; /* number of codes for each tree */
+    unsigned lcodes, dcodes, blcodes; /* number of codes for each tree */
 {
     int rank;                    /* index in bl_order */
 
