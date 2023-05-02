@@ -31,7 +31,7 @@ const char inflate_copyright[] =
  */
 int ZLIB_INTERNAL inflate_table(type, lens, codes, table, bits, work)
 codetype type;
-unsigned short FAR *lens;
+const unsigned short FAR *lens;
 unsigned codes;
 code FAR * FAR *table;
 unsigned FAR *bits;
