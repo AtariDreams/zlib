@@ -143,7 +143,7 @@ local void gen_codes      OF((ct_data *tree, int max_code, ushf *bl_count));
 local void build_tree     OF((deflate_state *s, tree_desc *desc));
 local void scan_tree      OF((deflate_state *s, ct_data *tree, int max_code));
 local void send_tree      OF((deflate_state *s, ct_data *tree, int max_code));
-local int  build_bl_tree  OF((deflate_state *s));
+local unsigned  build_bl_tree  OF((deflate_state *s));
 local void send_all_trees OF((deflate_state *s, int lcodes, int dcodes,
                               int blcodes));
 local void compress_block OF((deflate_state *s, const ct_data *ltree,
@@ -796,10 +796,10 @@ local void send_tree(s, tree, max_code)
  * Construct the Huffman tree for the bit lengths and return the index in
  * bl_order of the last bit length code to send.
  */
-local int build_bl_tree(s)
+local unsigned build_bl_tree(s)
     deflate_state *s;
 {
-    int max_blindex;  /* index of last bit length code of non zero freq */
+    unsigned max_blindex;  /* index of last bit length code of non zero freq */
 
     /* Determine the bit length frequencies for literal and distance trees */
     scan_tree(s, (ct_data *)s->dyn_ltree, s->l_desc.max_code);
@@ -848,13 +848,13 @@ local void send_all_trees(s, lcodes, dcodes, blcodes)
         Tracev((stderr, "\nbl code %2d ", bl_order[rank]));
         send_bits(s, s->bl_tree[bl_order[rank]].Len, 3);
     }
-    Tracev((stderr, "\nbl tree: sent %ld", s->bits_sent));
+    Tracev((stderr, "\nbl tree: sent %lu", s->bits_sent));
 
     send_tree(s, (ct_data *)s->dyn_ltree, lcodes - 1);  /* literal tree */
-    Tracev((stderr, "\nlit tree: sent %ld", s->bits_sent));
+    Tracev((stderr, "\nlit tree: sent %lu", s->bits_sent));
 
     send_tree(s, (ct_data *)s->dyn_dtree, dcodes - 1);  /* distance tree */
-    Tracev((stderr, "\ndist tree: sent %ld", s->bits_sent));
+    Tracev((stderr, "\ndist tree: sent %lu", s->bits_sent));
 }
 
 /* ===========================================================================
@@ -916,7 +916,7 @@ void ZLIB_INTERNAL _tr_flush_block(s, buf, stored_len, last)
     int last;         /* one if this is the last block for a file */
 {
     ulg opt_lenb, static_lenb; /* opt_len and static_len in bytes */
-    int max_blindex = 0;  /* index of last bit length code of non zero freq */
+    unsigned int max_blindex = 0;  /* index of last bit length code of non zero freq */
 
     /* Build the Huffman trees unless a stored block is forced */
     if (s->level > 0) {
